@@ -18,26 +18,16 @@ def resize_images(image_arrays, size=[32, 32]):
     return np.expand_dims(resized_image_arrays, 3)  
 
 
-def save_pickle(data, path):
-    with open(path, 'wb') as f:
-        pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
-        print ('File Saved as: %s..' %path)
 
-def getTrain(mnist):
-	return {'X': resize_images(mnist.train.images.reshape(-1, 28, 28)),'y': mnist.train.labels}
 
-def getTest(mnist):
-	return {'X': resize_images(mnist.test.images.reshape(-1, 28, 28)),'y': mnist.test.labels}
+mnist = input_data.read_data_sets("mnist/")
 
-mnist = input_data.read_data_sets("MNIST_data/")
-
-getTrain(mnist)
 
 #get the training and testing samples
 
-train = getTrain(mnist)
+train = {'X': resize_images(mnist.train.images.reshape(-1, 28, 28)),'y': mnist.train.labels}
 
-test = getTest(mnist)
+test = {'X': resize_images(mnist.test.images.reshape(-1, 28, 28)),'y': mnist.test.labels}
 
 #remove saved file if already exists
 
@@ -48,8 +38,10 @@ except OSError:
 	print "Error in os.remove"
 	exit(0)
 
-#save_pickle
-    
-save_pickle(train, 'mnist/train.pkl')
-save_pickle(test, 'mnist/test.pkl')
-    
+#save into pickle
+with open('mnist/train.pkl', 'wb') as f:
+        pickle.dump(train, f, pickle.HIGHEST_PROTOCOL)
+        print ('File Saved as: %s..' %path)
+with open('mnist/test.pkl', 'wb') as f:
+        pickle.dump(test, f, pickle.HIGHEST_PROTOCOL)
+        print ('File Saved as: %s..' %path)   
